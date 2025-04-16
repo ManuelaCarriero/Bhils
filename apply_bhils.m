@@ -2,36 +2,46 @@
 %data=zeros(9,4);
 %data=data_1;
 %%
-%PCA
+%data
+%height, distance to work, weight, shoe size
 
-
+data = load('data.txt');
 data_scored = zscore(data);
 
-[coeff,score,latent,tsquared,explained,mu]=pca(data_scored);
+data_size=size(data);
+n_obs=data_size(1);
+%%
+%PCA
 
-%figure, scatter(coeff(:,1),coeff(:,2));
-figure, scatter(score(:,1),score(:,2));
+[coeff,score,latent,tsquared,explained,mu]=pca(data_scored);
 
 figure, bar(explained);
 xlabel 'N Components'
 ylabel 'Variance explained (%)'
 
-figure, bar(coeff(:,1));
+%choose which component to plot the 
+% loading scores for
+comp=1;
+
+figure, bar(coeff(:,comp));
 xlabel('Variable')
-ylabel('Loading Scores')
+comp_str=num2str(comp);
+ylabel(strcat('Loading Scores PC',comp_str))
 ylim([0,1])
 
 %params to choose
-height=data(:,1);
-n_obs=numel(height);
+n_var=1; %variable which most accounts for variance
 thr = 180;
 x_comp=1;
 y_comp=2;
 
-%plot
+
+
+%plot data in PCA latent space
+
 figure,
 for i = 1:n_obs
-    if height(i,1) > thr
+    if data(i,n_var) > thr
         scatter(score(i,x_comp),score(i,y_comp),350,'.','r')
         
         %PC labels  
@@ -51,27 +61,47 @@ for i = 1:n_obs
         scatter(score(i,x_comp),score(i,y_comp),350,'.','b')
     end
 end
+
 %%
 %PLS
+%height, distance to work, weight, shoe size
 
-[XL,YL,XS,YS,BETA,PCTVAR,MSE,stats] = plsregress(data_scored(:,2),data_scored(:,3:4));
 
+n_comp=3;
+[XL,YL,XS,YS,BETA,PCTVAR,MSE,stats] = plsregress(data_scored(:,1:3),data_scored(:,4),n_comp);
+
+%ncomp in PLS must be <= number of independent variables
+%ncomp in Y is the same as the ncomp chosen
+
+%plot variance explained by each component
+%to understand which component to keep
+%to have signal and discard noise 
+% as much as possible
 figure
-plot(1:2,cumsum(100*PCTVAR(2,:)),'-bo');
+plot(1:n_comp,cumsum(100*PCTVAR(2,:)),'-bo');
 xlabel('Number of PLS components');
 ylabel('Percent Variance Explained in y');
 
-figure,
-scatter(XS(:,1),YS(:,1))
+figure
+n_comp_str=num2str(n_comp);
+bar(100*PCTVAR(1,1:n_comp))
+xlabel(strcat('PLS X',n_comp_str));
+ylabel('Percent of variance explained');
+
+figure
+bar(100*PCTVAR(2,1:n_comp))
+xlabel(strcat('PLS Y',n_comp_str));
+ylabel('Percent of variance explained');
 
 %params to choose
+%typically they are the same
 x_comp=1;
 y_comp=1;
 
 figure,
 th = 180;
-for i = 1:9
-    if height(i,1) > th
+for i = 1:n_obs
+    if data(i,n_var) > th
         hold on
         scatter(XS(i,x_comp),YS(i,y_comp),350,'.','r')
         x_comp_str=num2str(x_comp);
@@ -89,4 +119,7 @@ for i = 1:9
     end
 end
 
-figure, scatter(data(:,2),data(:,3))
+%plot data to show the degree of correlation between variables
+var1=1;
+var2=2;
+figure, scatter(data(:,var1),data(:,var2),350,'.','b');

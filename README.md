@@ -11,3 +11,10 @@ The toy dataset X and Y variables are related through different linear correlati
 coefficients values: $r_{Y1X1}=0.89$, $p-value=0.0012$; $r_{Y1X2}=0.06$, $p-value=0.87$; 
 $r_{Y2X1}=0.91$, $p-value=0.0006$; $r_{Y2X2}=0.05$, $p-value=0.89$; 
 $r_{X1X2}=0.07$, $p-value=0.84$; $r_{Y1Y2}=0.78$, $p-value=0.01$).
+
+<p align="center">
+  <img 
+    width="400"
+    src="https://github.com/ManuelaCarriero/Bhils/blob/main/documentation_images/work_in_progress.png"
+  >
+</p>

@@ -1,7 +1,7 @@
 %% parameters to be chosen by the user
 % if you want a monovariate PLS or multivariate PLS toydataset latent space
 
-pls_type = 'monovariate_x'; %monovariate_y %multivariate
+pls_type = 'multivariate';%'monovariate_x'; %monovariate_y %multivariate
 variable = 'height'; %if monovariate_x: distance to work %if monovariate_y: weight, shoe size
 
 % number of components for the clustering of the EMI dataset in the PCA
@@ -221,24 +221,58 @@ for i = 1:n_obs
 end
 
 %% EMI data latent space and unsupervised clustering
+data_emi=load('EMI_ROIs.mat');
+data_emi=cat(2,data_emi.y,data_emi.x_rsoma,data_emi.x_fsoma,data_emi.x_fneurite,data_emi.x_fextra,data_emi.x_De,data_emi.x_Din);
+cmro2 = data_emi(:,1);
+rsoma = data_emi(:,2);
+fsoma = data_emi(:,3);
+fneurite = data_emi(:,4);
+fextra = data_emi(:,5);
+De = data_emi(:,6);
+Din = data_emi(:,7);
 
 %% PCA 
 
-disp('PLOT 7 - plot EMI dataset in PCA latent space')
+
 
 % %plot data to show the degree of correlation between variables
 % var1=1;
 % var2=2;
 % figure, scatter(data(:,var1),data(:,var2),350,'.','b');
 
-%load emi rois
-data_emi=load('EMI_ROIs.mat');
-data_emi=cat(2, data_emi.y,data_emi.x_rsoma,data_emi.x_fsoma,data_emi.x_fneurite,data_emi.x_fextra,data_emi.x_De,data_emi.x_Din);
 data_emi_scored=zscore(data_emi);
 [coeff,score,latent,tsquared,explained,mu]=pca(data_emi_scored);
 
+%%
+disp('PLOT 7 - 8: PCA - EMI data, check the scree plot and loading scores')
 
+figure, bar(explained);
+set(get(gca, 'XAxis'), 'FontWeight', 'bold','FontSize',14);
+set(get(gca, 'YAxis'), 'FontWeight', 'bold','FontSize',14);
+set(gca,'box','off')
+xlabel 'N Components'
+ylabel 'Variance explained (%)'
+title 'PLOT 7 - PCA EMI dataset'
+grid on
 
+%choose which component to plot the 
+% loading scores for
+comp=1;
+
+figure, bar(coeff(:,comp));
+xticklabels({'CMRO_2','R_{soma}','f_{soma}','f_{neurite}','f_{extra}','D_e','D_{in}'})
+set(get(gca, 'XAxis'), 'FontWeight', 'bold','FontSize',14);
+set(get(gca, 'YAxis'), 'FontWeight', 'bold','FontSize',14);
+set(gca,'box','off')
+xlabel('Variable')
+comp_str=num2str(comp);
+ylabel(strcat('Loading Scores PC',comp_str))
+%ylim([0,1])
+title 'PLOT 8 - PCA EMI dataset'
+grid on
+
+%%
+disp('PLOT 9 - plot EMI dataset in PCA latent space')
 %clustering
 epsilon=1;
 minpts=5;
@@ -262,6 +296,19 @@ idx = dbscan(pca_components_for_clustering,epsilon,minpts);
 %check the class assigned to each sample
 unique(idx);
 
+x_comp=1;
+y_comp=2;
+
+
+%save samples values which are labelled with black colour
+cmro2_value_cluster_pca = [];
+rsoma_value_cluster_pca = [];
+fsoma_value_cluster_pca = [];
+fneurite_value_cluster_pca = [];
+fextra_value_cluster_pca = [];
+De_value_cluster_pca = [];
+Din_value_cluster_pca = [];
+
 figure,
 for i = 1:length(idx)
     if idx(i)>0
@@ -269,15 +316,28 @@ for i = 1:length(idx)
     hold on
     else
         scatter(score(i,1), score(i,2), 350, '.', 'k');
+        cmro2_value_cluster_pca(end+1) = cmro2(i);
+        rsoma_value_cluster_pca(end+1) = rsoma(i);
+        fsoma_value_cluster_pca(end+1) = fsoma(i);
+        fneurite_value_cluster_pca(end+1) = fneurite(i);
+        fextra_value_cluster_pca(end+1) = fextra(i);
+        De_value_cluster_pca(end+1) = De(i);
+        Din_value_cluster_pca(end+1) = Din(i);
     hold on
     end
     set(get(gca, 'XAxis'), 'FontWeight', 'bold','FontSize',14);
     set(get(gca, 'YAxis'), 'FontWeight', 'bold','FontSize',14);
     set(gca,'box','off')
     grid on
-    xlabel('PC1')
-    ylabel('PC2')
-    title(strcat('PLOT 7 - EMI data, PCA latent space, N\_comp\_for\_clustering=',num2str(n_comp_for_clustering),' PCs'))
+    %var explained labels
+    x_explained=round(explained(x_comp),2);
+    y_explained=round(explained(y_comp),2);
+    x_explained_str=num2str(x_explained);
+    y_explained_str=num2str(y_explained);
+
+    xlabel(strcat('PC',x_comp_str,'(',x_explained_str,'%)'),'FontWeight','bold');
+    ylabel(strcat('PC',y_comp_str,'(',y_explained_str,'%)'),'FontWeight','bold');
+    title(strcat('PLOT 9 - EMI data, PCA latent space, N\_comp\_for\_clustering=',num2str(n_comp_for_clustering),' PCs'))
 end
 
 %% a check
@@ -289,14 +349,47 @@ end
 % data_emi=load('EMI_ROIs.mat');
 % scatter(data_emi.x_rsoma,data_emi.y)
 
+
 %% PLS
-disp('PLOT 8 - plot EMI dataset in PLS latent space')
 
 x_emi = cat(2,data_emi_scored(:,2),data_emi_scored(:,3),data_emi_scored(:,4),data_emi_scored(:,5),data_emi_scored(:,6),data_emi_scored(:,7));
 n_comp=length(x_emi(1,:));
 y_emi = data_emi_scored(:,1);
 
 [XL,YL,XS,YS,BETA,PCTVAR,MSE,stats] = plsregress(x_emi,y_emi,n_comp);
+
+
+%%
+disp('PLOT 10 - 11: PLS - EMI data, check the scree plot and loading scores')
+
+figure, bar(XL(:,1));
+xticklabels({'R_{soma}','f_{soma}','f_{neurite}','f_{extra}','D_e','D_{in}'})
+set(get(gca, 'XAxis'), 'FontWeight', 'bold','FontSize',14);
+set(get(gca, 'YAxis'), 'FontWeight', 'bold','FontSize',14);
+set(gca,'box','off')
+xlabel 'X loadings (First Component)'
+ylabel 'Loadings values'
+title 'PLOT 10 - PLS EMI dataset'
+grid on
+
+%choose which component to plot the 
+% loading scores for
+comp=1;
+
+figure, bar(YL);
+xticklabels({'R_{soma}','f_{soma}','f_{neurite}','f_{extra}','D_e','D_{in}'})
+set(get(gca, 'XAxis'), 'FontWeight', 'bold','FontSize',14);
+set(get(gca, 'YAxis'), 'FontWeight', 'bold','FontSize',14);
+set(gca,'box','off')
+xlabel('Y loadings')
+comp_str=num2str(comp);
+ylabel('Loadings values')
+%ylim([0,1])
+title 'PLOT 11 - PLS EMI dataset'
+grid on
+
+%%
+disp('PLOT 12 - plot EMI dataset in PLS latent space')
 
 %clustering
 epsilon=1;
@@ -305,6 +398,15 @@ data_clustering=cat(2,XS(:,1),YS(:,1));
 idx = dbscan(data_clustering,epsilon,minpts);
 unique(idx);
 
+%save samples values which are labelled with black colour
+cmro2_value_cluster_pls = [];
+rsoma_value_cluster_pls = [];
+fsoma_value_cluster_pls = [];
+fneurite_value_cluster_pls = [];
+fextra_value_cluster_pls = [];
+De_value_cluster_pls = [];
+Din_value_cluster_pls = [];
+
 figure,
 for i = 1:length(idx)
     if idx(i)>0
@@ -312,6 +414,13 @@ for i = 1:length(idx)
     hold on
     else
         scatter(XS(i,1), YS(i,1), 350, '.', 'k');
+        cmro2_value_cluster_pls(end+1) = cmro2(i);
+        rsoma_value_cluster_pls(end+1) = rsoma(i);
+        fsoma_value_cluster_pls(end+1) = fsoma(i);
+        fneurite_value_cluster_pls(end+1) = fneurite(i);
+        fextra_value_cluster_pls(end+1) = fextra(i);
+        De_value_cluster_pls(end+1) = De(i);
+        Din_value_cluster_pls(end+1) = Din(i);
     hold on
     end
     set(get(gca, 'XAxis'), 'FontWeight', 'bold','FontSize',14);
@@ -320,5 +429,87 @@ for i = 1:length(idx)
     grid on
     xlabel('PLS X1')
     ylabel('PLS Y1')
-    title 'PLOT 8 - EMI data, PLS latent space'
+    title 'PLOT 10 - EMI data, PLS latent space'
 end
+
+%% check where these samples are
+
+
+figure,
+hist(cmro2)
+hold on
+plot(cmro2_value_cluster_pca,zeros(1,length(cmro2_value_cluster_pca)),'o','MarkerSize',10,'MarkerFaceColor','red')
+hold on
+plot(cmro2_value_cluster_pls,zeros(1,length(cmro2_value_cluster_pls)),'o','MarkerSize',10,'MarkerFaceColor','cyan')
+xlabel('CMRO_2 regional values','FontSize',14,'FontWeight','bold')
+ylabel('counts','FontSize',14,'FontWeight','bold')
+legend('','PCA cluster','PLS cluster')
+ylim([0,15]);
+grid on
+
+figure,
+hist(rsoma)
+hold on
+plot(rsoma_value_cluster_pca,zeros(1,length(rsoma_value_cluster_pca)),'o','MarkerSize',10,'MarkerFaceColor','red')
+hold on
+plot(rsoma_value_cluster_pls,zeros(1,length(rsoma_value_cluster_pls)),'o','MarkerSize',10,'MarkerFaceColor','cyan')
+xlabel('R_{soma} regional values','FontSize',14,'FontWeight','bold')
+ylabel('counts','FontSize',14,'FontWeight','bold')
+legend('','PCA cluster','PLS cluster')
+grid on
+
+figure,
+hist(fsoma)
+hold on
+plot(fsoma_value_cluster_pca,zeros(1,length(fsoma_value_cluster_pca)),'o','MarkerSize',10,'MarkerFaceColor','red')
+hold on
+plot(fsoma_value_cluster_pls,zeros(1,length(fsoma_value_cluster_pls)),'o','MarkerSize',10,'MarkerFaceColor','cyan')
+xlabel('f_{soma} regional values','FontSize',14,'FontWeight','bold')
+ylabel('counts','FontSize',14,'FontWeight','bold')
+legend('','PCA cluster','PLS cluster')
+grid on
+
+figure,
+hist(fneurite)
+hold on
+plot(fneurite_value_cluster_pca,zeros(1,length(fneurite_value_cluster_pca)),'o','MarkerSize',10,'MarkerFaceColor','red')
+hold on
+plot(fneurite_value_cluster_pls,zeros(1,length(fneurite_value_cluster_pls)),'o','MarkerSize',10,'MarkerFaceColor','cyan')
+xlabel('f_{neurite} regional values','FontSize',14,'FontWeight','bold')
+ylabel('counts','FontSize',14,'FontWeight','bold')
+legend('','PCA cluster','PLS cluster')
+grid on
+
+
+figure,
+hist(fextra)
+hold on
+plot(fextra_value_cluster_pca,zeros(1,length(fextra_value_cluster_pca)),'o','MarkerSize',10,'MarkerFaceColor','red')
+hold on
+plot(fextra_value_cluster_pls,zeros(1,length(fextra_value_cluster_pls)),'o','MarkerSize',10,'MarkerFaceColor','cyan')
+xlabel('f_{extra} regional values','FontSize',14,'FontWeight','bold')
+ylabel('counts','FontSize',14,'FontWeight','bold')
+legend('','PCA cluster','PLS cluster')
+grid on
+
+figure,
+hist(De)
+hold on
+plot(De_value_cluster_pca,zeros(1,length(De_value_cluster_pca)),'o','MarkerSize',10,'MarkerFaceColor','red')
+hold on
+plot(De_value_cluster_pls,zeros(1,length(De_value_cluster_pls)),'o','MarkerSize',10,'MarkerFaceColor','cyan')
+xlabel('De regional values','FontSize',14,'FontWeight','bold')
+ylabel('counts','FontSize',14,'FontWeight','bold')
+legend('','PCA cluster','PLS cluster')
+grid on
+
+figure,
+hist(Din)
+hold on
+plot(Din_value_cluster_pca,zeros(1,length(Din_value_cluster_pca)),'o','MarkerSize',10,'MarkerFaceColor','red')
+hold on
+plot(Din_value_cluster_pls,zeros(1,length(Din_value_cluster_pls)),'o','MarkerSize',10,'MarkerFaceColor','cyan')
+xlabel('D_{in} regional values','FontSize',14,'FontWeight','bold')
+ylabel('counts','FontSize',14,'FontWeight','bold')
+legend('','PCA cluster','PLS cluster')
+grid on

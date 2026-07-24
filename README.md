@@ -12,7 +12,7 @@ This repo contains also the "MRI dataset" section that shows where the samples o
 The toy dataset is made of two independent variables X (height $X_1$ and distance to work $X_2$), 
 two dependent variables (weight $Y_1$ and shoe size $Y_2$) and nine samples. 
 
-You can find the dataset in the video of this tutorial: LINK.
+You can find the dataset in the video of this tutorial: [LINK](https://www.youtube.com/watch?v=AxmqUKYeD-U).
 
 The toy dataset X and Y variables are related through different linear correlation
 coefficients values: $r_{Y1X1}=0.89$, $p-value=0.0012$; $r_{Y1X2}=0.06$, $p-value=0.87$; 

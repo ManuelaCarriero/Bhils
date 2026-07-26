@@ -31,14 +31,14 @@ $r_{X1X2}=0.07$, $p-value=0.84$; $r_{Y1Y2}=0.78$, $p-value=0.01$.
 </p>
 <p align="center">
   <img 
-    width="400"
+    width="800"
     src="https://github.com/ManuelaCarriero/Bhils/blob/main/documentation_images/latent_space_pls.svg"
   >
 
 </p>
 <p align="center">
   <img 
-    width="400"
+    width="800"
     src="https://github.com/ManuelaCarriero/Bhils/blob/main/documentation_images/latent_space.svg"
   >
   

@@ -19,46 +19,7 @@ coefficients values: $r_{Y1X1}=0.89$, $p-value=0.0012$; $r_{Y1X2}=0.06$, $p-valu
 $r_{Y2X1}=0.91$, $p-value=0.0006$; $r_{Y2X2}=0.05$, $p-value=0.89$; 
 $r_{X1X2}=0.07$, $p-value=0.84$; $r_{Y1Y2}=0.78$, $p-value=0.01$.
 
-<p align="center">
-  <img 
-    width="400"
-    src="https://github.com/ManuelaCarriero/Bhils/blob/main/documentation_images/tutorial_PLSlatentspace.png"
-  >
 
-</p>
-<p align="center">
-  <img 
-    width="400"
-    src="https://github.com/ManuelaCarriero/Bhils/blob/main/documentation_images/tutorial_PLSlatentspace_monovariateYweight.png"
-  >
-
-</p>
-<p align="center">
-  <img 
-    width="400"
-    src="https://github.com/ManuelaCarriero/Bhils/blob/main/documentation_images/tutorial_PLSlatentspace_monovariateYshoesize.png"
-  >
-
-</p>
-<p align="center">
-  <img 
-    width="400"
-    src="https://github.com/ManuelaCarriero/Bhils/blob/main/documentation_images/tutorial_PLSlatentspace_monovariateXheight.png"
-  >
-
-</p>
-<p align="center">
-  <img 
-    width="400"
-    src="https://github.com/ManuelaCarriero/Bhils/blob/main/documentation_images/tutorial_PLSlatentspace_monovariateXdistance_to_work.png"
-  >
-
-</p>
-<p align="center">
-  <img 
-    width="400"
-    src="https://github.com/ManuelaCarriero/Bhils/blob/main/documentation_images/tutorial_PCAscreeplot.png"
-  >
 
 </p>
 <p align="center">

@@ -34,3 +34,38 @@ $r_{X1X2}=0.07$, $p-value=0.84$; $r_{Y1Y2}=0.78$, $p-value=0.01$.
     src="https://github.com/ManuelaCarriero/Bhils/blob/main/documentation_images/dist_cmro2.svg"
   >
 </p>
+<p align="center">
+  <img 
+    width="400"
+    src="https://github.com/ManuelaCarriero/Bhils/blob/main/documentation_images/dist_Rsoma.svg"
+  >
+</p>
+<p align="center">
+  <img 
+    width="400"
+    src="https://github.com/ManuelaCarriero/Bhils/blob/main/documentation_images/dist_fsoma.svg"
+  >
+</p>
+<p align="center">
+  <img 
+    width="400"
+    src="https://github.com/ManuelaCarriero/Bhils/blob/main/documentation_images/dist_fneurite.svg"
+  >
+</p>
+<p align="center">
+  <img 
+    width="400"
+    src="https://github.com/ManuelaCarriero/Bhils/blob/main/documentation_images/dist_fextra.svg"
+  >
+  </p>
+<p align="center">
+  <img 
+    width="400"
+    src="https://github.com/ManuelaCarriero/Bhils/blob/main/documentation_images/dist_Din.svg"
+  >
+    </p>
+<p align="center">
+  <img 
+    width="400"
+    src="https://github.com/ManuelaCarriero/Bhils/blob/main/documentation_images/dist_De.svg"
+  >

@@ -1,4 +1,4 @@
-# Bhils
+# Bhils (BILLS)
 Project repository for BrainHack Rome 2025.
 
 BHILS stands for Brain Hacking in Latent Space. To make the acronym easier to remember, the project was later renamed BILLS.

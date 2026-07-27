@@ -1,5 +1,7 @@
 # Bhils
-Project repository for brainhack in Rome 2025. Bhils stands for "Brain Hacking In Latent Space". 
+Project repository for BrainHack Rome 2025.
+
+BHILS stands for Brain Hacking in Latent Space. To make the acronym easier to remember, the project was later renamed BILLS.
 
 For the brain hackathon event, we analysed both a toy dataset and a MRI dataset. This repository contain the Matlab and Python codes used for the analysis, that are [apply_bhils.m](https://github.com/ManuelaCarriero/Bhils/blob/main/apply_bhils.m) and [https://github.com/ManuelaCarriero/Bhils/tree/tsansimoes-patch-1](https://github.com/ManuelaCarriero/Bhils/tree/tsansimoes-patch-1). 
 

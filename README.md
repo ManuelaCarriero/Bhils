@@ -49,7 +49,9 @@ The toy dataset in PLS latent space, considering multivariate X and Y, is report
     width="800"
     src="https://github.com/ManuelaCarriero/Bhils/blob/main/documentation_images/pc_analysis.svg"
   >
+  
 Figure 1.
+
 </p>
 <p align="center">
   <img 

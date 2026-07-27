@@ -58,6 +58,7 @@ Figure 1.
     width="800"
     src="https://github.com/ManuelaCarriero/Bhils/blob/main/documentation_images/latent_space_pls.svg"
   >
+  
 Figure 2.
 
 <p align="center">
@@ -65,6 +66,7 @@ Figure 2.
     width="800"
     src="https://github.com/ManuelaCarriero/Bhils/blob/main/documentation_images/latent_space.svg"
   >
+  
 Figure 3.
 
   ## Analysis of the MRI dataset 

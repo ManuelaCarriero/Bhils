@@ -1,8 +1,8 @@
 %% parameters to be chosen by the user
 % if you want a monovariate PLS or multivariate PLS toydataset latent space
 
-pls_type = 'multivariate';%'monovariate_x'; %monovariate_y %multivariate
-variable = 'height'; %if monovariate_x: distance to work %if monovariate_y: weight, shoe size
+pls_type = 'monovariate_y';%'monovariate_x'; %monovariate_y %multivariate
+variable = 'shoe size'; %if monovariate_x: height, distance to work %if monovariate_y: weight, shoe size
 
 % number of components for the clustering of the EMI dataset in the PCA
 % latent space
@@ -57,6 +57,7 @@ grid on
 comp=1;
 
 figure, bar(coeff(:,comp));
+xticklabels({'Height','Distance','Weight','Shoe Size'})
 set(get(gca, 'XAxis'), 'FontWeight', 'bold','FontSize',14);
 set(get(gca, 'YAxis'), 'FontWeight', 'bold','FontSize',14);
 set(gca,'box','off')
@@ -164,11 +165,12 @@ disp('PLOT 4 and 5 - understand the variable which explains most the variance us
 figure,
 x_pctvar=1;
 bar(100*PCTVAR(x_pctvar,1:n_comp))
+xticklabels({'Height','Distance'})
 set(get(gca, 'XAxis'), 'FontWeight', 'bold','FontSize',14);
 set(get(gca, 'YAxis'), 'FontWeight', 'bold','FontSize',14);
 set(gca,'box','off')
 xlabel('PLS X');
-ylabel('Percent of variance explained');
+ylabel('Loading values');
 title 'PLOT 4 - PLS'
 grid on
 
@@ -179,7 +181,7 @@ set(get(gca, 'XAxis'), 'FontWeight', 'bold','FontSize',14);
 set(get(gca, 'YAxis'), 'FontWeight', 'bold','FontSize',14);
 set(gca,'box','off')
 xlabel('PLS Y');
-ylabel('Percent of variance explained');
+ylabel('Loading values');
 title 'PLOT 5 - PLS'
 grid on
 
@@ -246,30 +248,33 @@ data_emi_scored=zscore(data_emi);
 %%
 disp('PLOT 7 - 8: PCA - EMI data, check the scree plot and loading scores')
 
-figure, bar(explained);
+fig=figure; 
+bar(explained);
 set(get(gca, 'XAxis'), 'FontWeight', 'bold','FontSize',14);
 set(get(gca, 'YAxis'), 'FontWeight', 'bold','FontSize',14);
 set(gca,'box','off')
-xlabel 'N Components'
-ylabel 'Variance explained (%)'
-title 'PLOT 7 - PCA EMI dataset'
+xlabel('N Components','FontWeight','bold')
+ylabel('Variance explained (%)','FontWeight','bold')
+%title 'PLOT 7 - PCA EMI dataset'
 grid on
-
+saveas(fig,'PCA_PCsVariance_EMIdataset.svg')
 %choose which component to plot the 
 % loading scores for
 comp=1;
 
-figure, bar(coeff(:,comp));
+fig=figure; 
+bar(coeff(:,comp));
 xticklabels({'CMRO_2','R_{soma}','f_{soma}','f_{neurite}','f_{extra}','D_e','D_{in}'})
 set(get(gca, 'XAxis'), 'FontWeight', 'bold','FontSize',14);
 set(get(gca, 'YAxis'), 'FontWeight', 'bold','FontSize',14);
 set(gca,'box','off')
-xlabel('Variable')
+xlabel('Variable','FontWeight','bold')
 comp_str=num2str(comp);
-ylabel(strcat('Loading Scores PC',comp_str))
+ylabel(strcat('Loading Scores PC',comp_str),'FontWeight','bold')
 %ylim([0,1])
-title 'PLOT 8 - PCA EMI dataset'
+%title 'PLOT 8 - PCA EMI dataset'
 grid on
+saveas(fig,'PCA_loadingscoresPC1_EMIdataset.svg')
 
 %%
 disp('PLOT 9 - plot EMI dataset in PCA latent space')
@@ -309,12 +314,12 @@ fextra_value_cluster_pca = [];
 De_value_cluster_pca = [];
 Din_value_cluster_pca = [];
 
-figure,
+fig=figure;
 for i = 1:length(idx)
-    if idx(i)>0
+    if idx(i)==1
         scatter(score(i,1), score(i,2), 350, '.', 'm');
     hold on
-    else
+    elseif idx(i)==-1
         scatter(score(i,1), score(i,2), 350, '.', 'k');
         cmro2_value_cluster_pca(end+1) = cmro2(i);
         rsoma_value_cluster_pca(end+1) = rsoma(i);
@@ -324,6 +329,8 @@ for i = 1:length(idx)
         De_value_cluster_pca(end+1) = De(i);
         Din_value_cluster_pca(end+1) = Din(i);
     hold on
+    elseif idx(i)>1
+        scatter(score(i,1), score(i,2), 350, '.', 'c');
     end
     set(get(gca, 'XAxis'), 'FontWeight', 'bold','FontSize',14);
     set(get(gca, 'YAxis'), 'FontWeight', 'bold','FontSize',14);
@@ -335,10 +342,11 @@ for i = 1:length(idx)
     x_explained_str=num2str(x_explained);
     y_explained_str=num2str(y_explained);
 
-    xlabel(strcat('PC',x_comp_str,'(',x_explained_str,'%)'),'FontWeight','bold');
-    ylabel(strcat('PC',y_comp_str,'(',y_explained_str,'%)'),'FontWeight','bold');
-    title(strcat('PLOT 9 - EMI data, PCA latent space, N\_comp\_for\_clustering=',num2str(n_comp_for_clustering),' PCs'))
+    xlabel(strcat('PC',num2str(x_comp),'(',x_explained_str,'%)'),'FontWeight','bold');
+    ylabel(strcat('PC',num2str(y_comp),'(',y_explained_str,'%)'),'FontWeight','bold');
+    %title(strcat('PLOT 9 - EMI data, PCA latent space, N\_comp\_for\_clustering=',num2str(n_comp_for_clustering),' PCs'))
 end
+saveas(fig,strcat('PCA_latentspace_n',num2str(n_comp_for_clustering),'comp_EMIdataset.svg'))
 
 %% a check
 % figure,
@@ -361,32 +369,36 @@ y_emi = data_emi_scored(:,1);
 
 %%
 disp('PLOT 10 - 11: PLS - EMI data, check the scree plot and loading scores')
-
-figure, bar(XL(:,1));
+%COMPONENTS ARE COLUMNS OF XL
+fig=figure; 
+bar(XL(:,1));
 xticklabels({'R_{soma}','f_{soma}','f_{neurite}','f_{extra}','D_e','D_{in}'})
 set(get(gca, 'XAxis'), 'FontWeight', 'bold','FontSize',14);
 set(get(gca, 'YAxis'), 'FontWeight', 'bold','FontSize',14);
 set(gca,'box','off')
-xlabel 'X loadings (First Component)'
-ylabel 'Loadings values'
-title 'PLOT 10 - PLS EMI dataset'
+xlabel('X loadings (First Component)','FontWeight','bold')
+ylabel('Loadings values','FontWeight','bold')
+%title('PLOT 10 - PLS EMI dataset','FontWeight','bold')
 grid on
+saveas(fig,'PLS_Xloadings_EMIdataset.svg')
 
 %choose which component to plot the 
 % loading scores for
 comp=1;
 
-figure, bar(YL);
+fig=figure; 
+bar(YL);
 xticklabels({'R_{soma}','f_{soma}','f_{neurite}','f_{extra}','D_e','D_{in}'})
 set(get(gca, 'XAxis'), 'FontWeight', 'bold','FontSize',14);
 set(get(gca, 'YAxis'), 'FontWeight', 'bold','FontSize',14);
 set(gca,'box','off')
-xlabel('Y loadings')
+xlabel('Y loadings','FontWeight','bold')
 comp_str=num2str(comp);
-ylabel('Loadings values')
+ylabel('Loadings values','FontWeight','bold')
 %ylim([0,1])
-title 'PLOT 11 - PLS EMI dataset'
+%title('PLOT 11 - PLS EMI dataset','FontWeight','bold')
 grid on
+saveas(fig,'PLS_loadingvalues_EMIdataset.svg')
 
 %%
 disp('PLOT 12 - plot EMI dataset in PLS latent space')
@@ -407,7 +419,7 @@ fextra_value_cluster_pls = [];
 De_value_cluster_pls = [];
 Din_value_cluster_pls = [];
 
-figure,
+fig=figure;
 for i = 1:length(idx)
     if idx(i)>0
         scatter(XS(i,1), YS(i,1), 350, '.', 'm');
@@ -427,89 +439,97 @@ for i = 1:length(idx)
     set(get(gca, 'YAxis'), 'FontWeight', 'bold','FontSize',14);
     set(gca,'box','off')
     grid on
-    xlabel('PLS X1')
-    ylabel('PLS Y1')
-    title 'PLOT 10 - EMI data, PLS latent space'
+    xlabel('PLS X1','FontWeight','bold')
+    ylabel('PLS Y1','FontWeight','bold')
+    %title('PLOT 10 - EMI data, PLS latent space','FontWeight','bold')
 end
+
+saveas(fig,'PLS_latentspace_EMIdataset.svg')
 
 %% check where these samples are
 
 
-figure,
-hist(cmro2)
+fig=figure;
+hist(cmro2);
 hold on
-plot(cmro2_value_cluster_pca,zeros(1,length(cmro2_value_cluster_pca)),'o','MarkerSize',10,'MarkerFaceColor','red')
+plot(cmro2_value_cluster_pca,zeros(1,length(cmro2_value_cluster_pca)),'o','MarkerSize',10,'MarkerFaceColor','red');
 hold on
-plot(cmro2_value_cluster_pls,zeros(1,length(cmro2_value_cluster_pls)),'o','MarkerSize',10,'MarkerFaceColor','cyan')
+plot(cmro2_value_cluster_pls,zeros(1,length(cmro2_value_cluster_pls)),'o','MarkerSize',10,'MarkerFaceColor','cyan');
 xlabel('CMRO_2 regional values','FontSize',14,'FontWeight','bold')
 ylabel('counts','FontSize',14,'FontWeight','bold')
 legend('','PCA cluster','PLS cluster')
 ylim([0,15]);
 grid on
+saveas(fig,'dist_cmro2.svg')
 
-figure,
-hist(rsoma)
+fig=figure;
+hist(rsoma);
 hold on
-plot(rsoma_value_cluster_pca,zeros(1,length(rsoma_value_cluster_pca)),'o','MarkerSize',10,'MarkerFaceColor','red')
+plot(rsoma_value_cluster_pca,zeros(1,length(rsoma_value_cluster_pca)),'o','MarkerSize',10,'MarkerFaceColor','red');
 hold on
-plot(rsoma_value_cluster_pls,zeros(1,length(rsoma_value_cluster_pls)),'o','MarkerSize',10,'MarkerFaceColor','cyan')
+plot(rsoma_value_cluster_pls,zeros(1,length(rsoma_value_cluster_pls)),'o','MarkerSize',10,'MarkerFaceColor','cyan');
 xlabel('R_{soma} regional values','FontSize',14,'FontWeight','bold')
 ylabel('counts','FontSize',14,'FontWeight','bold')
 legend('','PCA cluster','PLS cluster')
 grid on
+saveas(fig,'dist_Rsoma.svg')
 
-figure,
-hist(fsoma)
+fig=figure;
+hist(fsoma);
 hold on
-plot(fsoma_value_cluster_pca,zeros(1,length(fsoma_value_cluster_pca)),'o','MarkerSize',10,'MarkerFaceColor','red')
+plot(fsoma_value_cluster_pca,zeros(1,length(fsoma_value_cluster_pca)),'o','MarkerSize',10,'MarkerFaceColor','red');
 hold on
-plot(fsoma_value_cluster_pls,zeros(1,length(fsoma_value_cluster_pls)),'o','MarkerSize',10,'MarkerFaceColor','cyan')
+plot(fsoma_value_cluster_pls,zeros(1,length(fsoma_value_cluster_pls)),'o','MarkerSize',10,'MarkerFaceColor','cyan');
 xlabel('f_{soma} regional values','FontSize',14,'FontWeight','bold')
 ylabel('counts','FontSize',14,'FontWeight','bold')
 legend('','PCA cluster','PLS cluster')
 grid on
+saveas(fig,'dist_fsoma.svg')
 
-figure,
-hist(fneurite)
+fig=figure;
+hist(fneurite);
 hold on
-plot(fneurite_value_cluster_pca,zeros(1,length(fneurite_value_cluster_pca)),'o','MarkerSize',10,'MarkerFaceColor','red')
+plot(fneurite_value_cluster_pca,zeros(1,length(fneurite_value_cluster_pca)),'o','MarkerSize',10,'MarkerFaceColor','red');
 hold on
-plot(fneurite_value_cluster_pls,zeros(1,length(fneurite_value_cluster_pls)),'o','MarkerSize',10,'MarkerFaceColor','cyan')
+plot(fneurite_value_cluster_pls,zeros(1,length(fneurite_value_cluster_pls)),'o','MarkerSize',10,'MarkerFaceColor','cyan');
 xlabel('f_{neurite} regional values','FontSize',14,'FontWeight','bold')
 ylabel('counts','FontSize',14,'FontWeight','bold')
 legend('','PCA cluster','PLS cluster')
 grid on
+saveas(fig,'dist_fneurite.svg')
 
-
-figure,
-hist(fextra)
+fig=figure;
+hist(fextra);
 hold on
-plot(fextra_value_cluster_pca,zeros(1,length(fextra_value_cluster_pca)),'o','MarkerSize',10,'MarkerFaceColor','red')
+plot(fextra_value_cluster_pca,zeros(1,length(fextra_value_cluster_pca)),'o','MarkerSize',10,'MarkerFaceColor','red');
 hold on
-plot(fextra_value_cluster_pls,zeros(1,length(fextra_value_cluster_pls)),'o','MarkerSize',10,'MarkerFaceColor','cyan')
+plot(fextra_value_cluster_pls,zeros(1,length(fextra_value_cluster_pls)),'o','MarkerSize',10,'MarkerFaceColor','cyan');
 xlabel('f_{extra} regional values','FontSize',14,'FontWeight','bold')
 ylabel('counts','FontSize',14,'FontWeight','bold')
 legend('','PCA cluster','PLS cluster')
 grid on
+saveas(fig,'dist_fextra.svg')
 
-figure,
-hist(De)
+fig=figure;
+hist(De);
 hold on
-plot(De_value_cluster_pca,zeros(1,length(De_value_cluster_pca)),'o','MarkerSize',10,'MarkerFaceColor','red')
+plot(De_value_cluster_pca,zeros(1,length(De_value_cluster_pca)),'o','MarkerSize',10,'MarkerFaceColor','red');
 hold on
-plot(De_value_cluster_pls,zeros(1,length(De_value_cluster_pls)),'o','MarkerSize',10,'MarkerFaceColor','cyan')
+plot(De_value_cluster_pls,zeros(1,length(De_value_cluster_pls)),'o','MarkerSize',10,'MarkerFaceColor','cyan');
 xlabel('De regional values','FontSize',14,'FontWeight','bold')
 ylabel('counts','FontSize',14,'FontWeight','bold')
 legend('','PCA cluster','PLS cluster')
 grid on
+saveas(fig,'dist_De.svg')
 
-figure,
-hist(Din)
+fig=figure;
+hist(Din);
 hold on
-plot(Din_value_cluster_pca,zeros(1,length(Din_value_cluster_pca)),'o','MarkerSize',10,'MarkerFaceColor','red')
+plot(Din_value_cluster_pca,zeros(1,length(Din_value_cluster_pca)),'o','MarkerSize',10,'MarkerFaceColor','red');
 hold on
-plot(Din_value_cluster_pls,zeros(1,length(Din_value_cluster_pls)),'o','MarkerSize',10,'MarkerFaceColor','cyan')
+plot(Din_value_cluster_pls,zeros(1,length(Din_value_cluster_pls)),'o','MarkerSize',10,'MarkerFaceColor','cyan');
 xlabel('D_{in} regional values','FontSize',14,'FontWeight','bold')
 ylabel('counts','FontSize',14,'FontWeight','bold')
 legend('','PCA cluster','PLS cluster')
 grid on
+saveas(fig,'dist_Din.svg')

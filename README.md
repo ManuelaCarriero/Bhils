@@ -1,7 +1,7 @@
 # Bhils
 Project repository for brainhack in Rome 2025. Bhils stands for "Brain Hacking In Latent Space". 
 
-For the brain hackathon event, we analysed both a toy dataset and a MRI dataset. This repository contain the Matlab and Python codes used for the analysis, that are [YOUR_CODE](https://github.com/ManuelaCarriero/Bhils/blob/main/apply_bhils.m) and [TIAGOS'CODE](https://github.com/ManuelaCarriero/Bhils/tree/tsansimoes-patch-1). 
+For the brain hackathon event, we analysed both a toy dataset and a MRI dataset. This repository contain the Matlab and Python codes used for the analysis, that are [apply_bhils.m](https://github.com/ManuelaCarriero/Bhils/blob/main/apply_bhils.m) and [https://github.com/ManuelaCarriero/Bhils/tree/tsansimoes-patch-1](https://github.com/ManuelaCarriero/Bhils/tree/tsansimoes-patch-1). 
 
 A detailed description of the analysis will be provided in the accompanying paper, which will be available soon.
 

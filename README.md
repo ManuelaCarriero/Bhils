@@ -12,7 +12,7 @@ BHILS stands for Brain Hacking in Latent Space. To make the acronym easier to re
 
 ## Introduction to the repository
 
-For the brain hackathon event, we analysed both a toy dataset and a MRI dataset in the PCA and PLS latent spaces. This repository contains the Matlab and Python codes used for the analysis, that are [apply_bhils.m](https://github.com/ManuelaCarriero/Bhils/blob/main/apply_bhils.m) and [https://github.com/ManuelaCarriero/Bhils/tree/tsansimoes-patch-1](https://github.com/ManuelaCarriero/Bhils/tree/tsansimoes-patch-1). 
+For the brain hackathon [event](https://brainhackrome.github.io/), we analysed both a toy dataset and a MRI dataset in the PCA and PLS latent spaces. This repository contains the Matlab and Python codes used for the analysis, that are [apply_bhils.m](https://github.com/ManuelaCarriero/Bhils/blob/main/apply_bhils.m) and [https://github.com/ManuelaCarriero/Bhils/tree/tsansimoes-patch-1](https://github.com/ManuelaCarriero/Bhils/tree/tsansimoes-patch-1). 
 
 A detailed description of the analysis will be provided in the accompanying paper, which is under revision.
 
